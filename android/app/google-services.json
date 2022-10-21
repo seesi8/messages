@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "857402905955",
+    "project_id": "chat-24ce7",
+    "storage_bucket": "chat-24ce7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857402905955:android:5f59543612fbc22f732f56",
+        "android_client_info": {
+          "package_name": "dev.samueldoes.message.messages"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "857402905955-k0tsoovlgong2u4hj4hjsvegjtddu7ko.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKSrUuVEFq7QYVgqeuU2z_jj5H-ySkHSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "857402905955-k0tsoovlgong2u4hj4hjsvegjtddu7ko.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
