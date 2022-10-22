@@ -1,6 +1,9 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:messages/services/auth.dart';
 import 'package:messages/services/models.dart';
 import 'package:rxdart/rxdart.dart';
@@ -267,7 +270,66 @@ class FirestoreService {
     }
   }
 
-  void removeRequest({required String userId, required String friendId}) {
+  void removeRequest({
+    required String userId,
+    required String friendId,
+  }) {
     _db.collection("requests").doc('from${userId}to${friendId}').delete();
+  }
+
+  Future<void> createUser(
+      {required UserCredential userCredential,
+      required String displayName,
+      required XFile file}) async {
+    // Signed in
+    final storageRef = FirebaseStorage.instance.ref();
+    final imgRef = storageRef.child("${Uuid().v4()}.");
+    print('Debug: ${file.path}, $displayName');
+    final fileFile = File(file.path);
+    print('Debug: ${fileFile}');
+    await imgRef.putFile(fileFile);
+    print("paster");
+    String storageUrl = await imgRef.getDownloadURL();
+    print("past");
+    String? userUID = userCredential.user!.uid;
+    final usersRef = _db.collection("users");
+    final q = usersRef
+        .where("displayName", isEqualTo: displayName)
+        .orderBy("username")
+        .limit(1);
+    final querySnapshot = await q.get();
+    print("queryTime");
+    String username = "";
+    print(
+        "${querySnapshot.docs.isEmpty}, ${querySnapshot.docs.length}, ${querySnapshot.docs}, $displayName");
+    if (querySnapshot.docs.isEmpty) {
+      username = displayName;
+    } else {
+      querySnapshot.docs.forEach((doc) {
+        String index = UserData.fromJson(doc.data(), doc.id)
+            .username
+            .split(displayName)[1];
+        if (index == "0") {
+          index = "0";
+        }
+        username = 'displayName ${(int.parse(index) + 1).toString()}';
+      });
+    }
+    final batch = _db.batch();
+    print("WHY:::: $username");
+    batch.set(_db.collection("users").doc(userUID), {
+      "displayName": displayName,
+      "username": username,
+      "profileIMG": storageUrl,
+      "email": userCredential.user!.email,
+      "creationDate": FieldValue.serverTimestamp(),
+      "lastActive": FieldValue.serverTimestamp(),
+      "friends": [],
+    });
+    batch.set(_db.collection("usernames").doc(username), {
+      "uid": userUID,
+    });
+
+    await batch.commit();
   }
 }

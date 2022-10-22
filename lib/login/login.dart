@@ -41,11 +41,35 @@ class Login extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () async {
-                await AuthService().signInWithPassword(
-                    emailAddress: emailTextController.text,
-                    password: passwordTextController.text);
-                Navigator.pushNamedAndRemoveUntil(
-                    context, '/', (route) => false);
+                try {
+                  await AuthService().signInWithPassword(
+                      emailAddress: emailTextController.text,
+                      password: passwordTextController.text);
+                  Navigator.pushNamedAndRemoveUntil(
+                      context, '/', (route) => false);
+                } catch (identifier) {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: const Text("Error"),
+                      content:
+                          const Text("You have entered some information wrong"),
+                      actions: <Widget>[
+                        TextButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.of(ctx).pop();
+                            },
+                            child: const Text("okay"),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                }
               },
               child: const Text('Sign In'),
             ),
