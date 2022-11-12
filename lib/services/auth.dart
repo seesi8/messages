@@ -80,7 +80,7 @@ class AuthService {
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password)
           .then((userCredential) async {
-        print("now");
+        print("now, $displayName");
         await FirestoreService().createUser(
             userCredential: userCredential,
             displayName: displayName,

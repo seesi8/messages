@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/gestures.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,8 @@ class _CreateState extends State<Create> {
   TextEditingController emailTextController = TextEditingController();
   TextEditingController passwordTextController = TextEditingController();
   TextEditingController displayNameTextController = TextEditingController();
+  TextStyle defaultStyle = TextStyle(color: Colors.grey, fontSize: 8.0);
+  TextStyle linkStyle = TextStyle(color: Colors.blue);
   XFile? image = null;
   File? imageFile;
   Widget build(BuildContext context) {
@@ -91,7 +94,7 @@ class _CreateState extends State<Create> {
                       context, '/', (route) => false);
                 }
               },
-              child: const Text('Sign In'),
+              child: const Text('Sign Up'),
             ),
             ElevatedButton(
               onPressed: () {
@@ -105,6 +108,30 @@ class _CreateState extends State<Create> {
                     width: 100,
                   )
                 : Text("Select A Profile Image"),
+            Center(
+                child: RichText(
+              text: TextSpan(
+                style: defaultStyle,
+                children: <TextSpan>[
+                  TextSpan(text: 'By clicking Sign Up, you agree to our '),
+                  TextSpan(
+                      text: 'Terms of Service',
+                      style: linkStyle,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.pushNamed(context, "/tos");
+                        }),
+                  TextSpan(text: ' and that you have read our '),
+                  TextSpan(
+                      text: 'Privacy Policy',
+                      style: linkStyle,
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.pushNamed(context, "/privacy");
+                        }),
+                ],
+              ),
+            ))
           ],
         ),
       ),
